@@ -12,9 +12,9 @@ import com.company.enroller.model.Participant;
 @Component("participantService")
 public class ParticipantService {
 
-	private Session session;
+    private Session session;
 
-	public ParticipantService() {
+    public ParticipantService() {
         session = DatabaseConnector.getInstance().getSession();
     }
 
@@ -23,7 +23,7 @@ public class ParticipantService {
     }
 
     public Participant findByLogin(String login) {
-		return (Participant) session.get(Participant.class, login);
+        return (Participant) session.get(Participant.class, login);
     }
 
     public Participant add(Participant participant) {

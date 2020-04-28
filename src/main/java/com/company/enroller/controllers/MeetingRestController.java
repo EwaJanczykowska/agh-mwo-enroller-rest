@@ -22,8 +22,14 @@ public class MeetingRestController {
     ParticipantService participantService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getMeetings() {
-        Collection<Meeting> meetings = meetingService.getAll();
+    public ResponseEntity<?> getMeetings(@RequestParam(value = "title", required = false) String title, @RequestParam(value = "description", required = false) String description) {
+        Collection<Meeting> meetings;
+        if (title == null && description == null) {
+            meetings = meetingService.getAll();
+        }
+        else {
+            meetings = meetingService.findMeetings(title, description);
+        }
         return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
     }
 
@@ -35,6 +41,12 @@ public class MeetingRestController {
         }
 
         return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET, params = "participant")
+    public ResponseEntity<?> getMeetingsByParticipant(@RequestParam(value = "participant") String participant) {
+        Collection<Meeting> meetings = meetingService.findByParticipant(participant);
+        return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)

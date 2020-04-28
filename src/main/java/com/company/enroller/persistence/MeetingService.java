@@ -18,7 +18,7 @@ public class MeetingService {
     }
 
     public Collection<Meeting> getAll() {
-        String hql = "FROM Meeting";
+        String hql = "FROM Meeting ORDER BY LOWER(title)";
         Query query = session.createQuery(hql);
         return query.list();
     }
@@ -47,4 +47,24 @@ public class MeetingService {
         transaction.commit();
     }
 
+    public Collection<Meeting> findMeetings(String title, String description) {
+        if (title==null) {
+            title = "";
+        }
+        if (description==null) {
+            description = "";
+        }
+        String hql = "FROM Meeting WHERE title LIKE :titleParam AND description LIKE :descriptionParam ORDER BY LOWER(title)";
+        Query query = session.createQuery(hql);
+        query.setString("titleParam", "%" + title + "%");
+        query.setString("descriptionParam", "%" + description + "%");
+        return query.list();
+    }
+
+    public Collection<Meeting> findByParticipant(String participant) {
+        String hql = "SELECT m FROM Meeting AS m INNER JOIN m.participants AS mp WHERE mp.login = :participantParam";
+        Query query = session.createQuery(hql);
+        query.setString("participantParam", participant);
+        return query.list();
+    }
 }
